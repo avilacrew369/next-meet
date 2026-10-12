@@ -8,6 +8,11 @@ export const BaseAuthSchema = z.object({
     newPassword: z.string().trim().min(8, {error: 'La contraseña debe tener al menos 8 caracteres'}),
  
 })
+export const SignInSchema = BaseAuthSchema.pick({
+    email: true,
+}).extend({
+    password:z.string().trim().min(1, {error: 'El password no puede ir vacio'}),
+})
 
 export const SignUpSchema = BaseAuthSchema.pick({
     name: true, 
@@ -20,3 +25,4 @@ export const SignUpSchema = BaseAuthSchema.pick({
 })
 
 export type SignUpInput = z.infer<typeof SignUpSchema>
+export type SignInInput = z.infer<typeof SignInSchema>
