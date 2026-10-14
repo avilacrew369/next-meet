@@ -1,5 +1,5 @@
 import { error } from "console"
-import { SignUpInput, SignInInput } from "../schemas/authSchema"
+import { SignUpInput, SignInInput, SetPasswordInput, ForgotPasswordInput } from "../schemas/authSchema"
 import { auth } from '@/lib/auth'
 import { success } from "zod"
 import { authRepository, IAauthRepository } from "./AuthRepository"
@@ -31,7 +31,9 @@ class AuthService {
                 name,
                 email,
                 password,
+                 callbackURL: '/dashboard'
             },
+             headers: await headers ()
         })
         return {
             error: '',
@@ -58,7 +60,7 @@ class AuthService {
                     password,
                     callbackURL: '/dashboard'
                 },
-                headers: await headers()
+               headers: await headers ()
             })
             return {
                 error: '',
@@ -91,7 +93,54 @@ class AuthService {
         
 
         
+    }
+    async requestPasswordReset(input: ForgotPasswordInput) {
+        const user = await this.authRepository.userExists(input.email)
+        if(!user){
+            return {
+                error: 'El usuario no existe...',
+                success: ''
+            }
         }
+        const { email } = input
+        await auth.api.requestPasswordReset({
+            body: {
+                email
+            }
+        })
+        return {
+            error: '',
+            success: 'Hemos enviado un email con instrucciones'
+        }
+
+    }
+     async confirmPasswordReset(input: SetPasswordInput, token: string) {
+        const { newPassword } = input
+        try {
+            await auth.api.resetPassword({
+                body: {
+                    newPassword,
+                    token
+                }
+            })
+            return {
+                error: '',
+                success: 'Password restablecido corectamente.'
+
+            }
+        } catch (error) {
+            if(error instanceof APIError) {
+                return {
+                    error: 'Token no valido o Expirado',
+                    success: ''
+                }
+            }
+        }
+        return {
+            error: '',
+            success: ''
+        }
+    }
 }
 
 

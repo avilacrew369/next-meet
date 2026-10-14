@@ -37,3 +37,15 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+import React, { Suspense } from 'react';
+
+const MyComponent = React.lazy(() => import('./MyComponent'));
+
+const App = () => {
+    return (
+        <Suspense fallback={<Spinner />}>
+            <MyComponent />
+        </Suspense>
+    );
+};

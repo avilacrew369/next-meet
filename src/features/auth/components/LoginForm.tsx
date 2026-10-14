@@ -24,6 +24,7 @@ export default function LoginForm() {
       }
       if(success) {
         toast.success(success)
+        redirect('/dashboard')
   }
 }
 

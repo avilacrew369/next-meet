@@ -1,6 +1,5 @@
-import React from 'react'
-import Hero from '../../src/shared/components/ui/Hero'
 import { Metadata } from "next";
+import Hero from '../../src/shared/components/ui/Hero'
 import { generatePageTitle } from '../../src/shared/utils/metadata';
 
 export const metadata: Metadata = {
@@ -10,8 +9,8 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-     <Hero />
      
+      <Hero />
     </>
   )
 }
